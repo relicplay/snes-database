@@ -6,6 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "extra": {
+      "API_KEY": "acaf86192e384591a1d8e7a349cc18ad"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
