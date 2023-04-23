@@ -10,9 +10,7 @@ import MyModal from './components/MyModal';
 import theme from './styles/theme.style.js';
 import {API_KEY} from '@env';
 
-//console.log('API KEY from app.json: ', Constants.expoConfig.extra.API_KEY);
-
-console.log('API KEY from .env: ', API_KEY);
+//console.log('API KEY from .env: ', API_KEY);
 
 
 //Displays error messages:
@@ -42,21 +40,25 @@ export default function App() {
     'Roboto': require('./assets/fonts/RobotoSlab-Regular.ttf'),
   });
 
-  const [fetchedData, setFetchedData] = useState([]);
+  const [snesTitles, setSnesTitles] = useState([]);
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
+  useEffect(() => {
+    console.log('snes titles data: ', snesTitles);
+  }, [snesTitles]);
+
   //General function for API-requests:
-  const apiRequest = async () => {
+  const apiRequest = async (callbackFunction=setSnesTitles) => {
     try {
-      console.log('API KEY: ', REACT_APP_API_KEY);
-      const request = `https://api.rawg.io/api/games?key=acaf86192e384591a1d8e7a349cc18ad&platforms=79`; //${process.env.REACT_APP_API_KEY}
+      console.log('API KEY: ', API_KEY);
+      const request = `https://api.rawg.io/api/games?key=${process.env.API_KEY}&platforms=79`;
       const res = await fetch(request);
       const data = await res.json();
       if (!res.ok) {
         statusCodes(res.status, data.status_message);
         return;
       }
-	console.log(data);
+      callbackFunction(data.results);
       //determineDataDestination(endpoint, data);
       //callbackFunction(data);
     } catch (err) {
@@ -75,25 +77,39 @@ export default function App() {
       <StatusBar style="invert" />
       <View style={styles.container}>
         <NavBar />
+        <Button title='Fetch Data' onPress={() => {apiRequest();}}></Button>
+        {
+          <FlatList
+          contentContainerStyle={styles.cardContainerFlat}
+          data={snesTitles}
+          renderItem={(item) => {
+            //console.log(item);
+            return (
+              <Card id={item.index} title={item.item.name} displayModal={displayModal}></Card>
+            );
+          }}
+          keyExtractor={(item, index) => {
+            return item.id;
+          }}
+          numColumns={2}
+          alwaysBounceVertical={false} />
+          }
         {/*
-          <FlatList>
-          <Text>TODO: add nav bar, titlescontainer</Text>
-          </FlatList>
-        */}
-        <Button title='Fetch Data' onPress={apiRequest}></Button>
         <ScrollView contentContainerStyle={styles.cardContainer}>
-          {/*<Text style={styles.testTxt}>Yoyo</Text>*/}
+          <Text style={styles.testTxt}>Yoyo</Text>
           <Card id='0' displayModal={displayModal}></Card>
           <Card id='1' displayModal={displayModal}></Card>
           <Card id='2' displayModal={displayModal}></Card>
           <Card id='3' displayModal={displayModal}></Card>
           <Card id='4' displayModal={displayModal}></Card>
         </ScrollView>
+        */}
         <MyModal visible={modalIsVisible} closeModal={displayModal} />
       </View>
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -114,6 +130,11 @@ const styles = StyleSheet.create({
     /*
     minWidth: '100%',
     */
+  },
+  cardContainerFlat: {
+    flexDirection: 'column',
+    backgroundColor: 'green',
+    width: '100%',
   },
   testTxt: {
     fontFamily: 'Oswald',
