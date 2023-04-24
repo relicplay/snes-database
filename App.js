@@ -85,7 +85,7 @@ export default function App() {
           renderItem={(item) => {
             //console.log(item);
             return (
-              <Card id={item.index} title={item.item.name} displayModal={displayModal}></Card>
+              <Card id={item.index} title={item.item.name} image={item.item.background_image} displayModal={displayModal}></Card>
             );
           }}
           keyExtractor={(item, index) => {

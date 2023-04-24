@@ -6,7 +6,7 @@ function Card(props) {
         <TouchableOpacity onPress={props.displayModal.bind(this, props.id)}>
             <View style={styles.cardContainer}>
                 <Text style={styles.cardHeader}>{props.title}</Text>
-                <Image style={styles.titleImage} source={require('../assets/images/noimg.png')} />
+                <Image style={styles.titleImage} source={props.image ? { uri: props.image } : require('../assets/images/noimg.png')} />
             </View>
         </TouchableOpacity>
     );
